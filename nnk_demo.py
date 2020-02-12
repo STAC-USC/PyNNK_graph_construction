@@ -17,7 +17,7 @@ flags.DEFINE_string('logs_dir', 'logs/', 'log directory to save results and outp
 flags.DEFINE_string('dataset', 'circles', 'dataset to use for experiment')
 # %% Algorithm specific parameters
 flags.DEFINE_integer('knn_param', 10, 'number of neighbors to use for NNK')
-flags.DEFINE_integer('sigma_k', 10, 'choice of "k"th neighbor for sigma calculation')
+# flags.DEFINE_integer('sigma_k', 10, 'choice of "k"th neighbor for sigma calculation')
 flags.DEFINE_float('thresh', 1e-6, 'threshold corresponding to minimum value of edge weights')
 flags.DEFINE_string('metric', 'rbf', 'Similarity metric to use for finding neighbors: cosine, rbf')
 flags.DEFINE_float('p', 2, 'type of Lp distance to use (if used)')
