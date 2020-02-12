@@ -1,4 +1,5 @@
 *.pyc
-dataset
+datasets
+logs
 .idea
 

@@ -81,7 +81,7 @@ class Create_Data:
         Create blobs of data in a given space.
         :param n_samples: no. of samples to generate
         :param n_dim: dimension of each sample
-        :param clusters: no. of clusters present in dataset
+        :param n_clusters: no. of clusters present in dataset
         :return: data points X, labels y
     """
 
@@ -91,7 +91,9 @@ class Create_Data:
         self.n_clusters = n_clusters
         self.random_state = 4629
         self.dataset_func = {"gauss_mixture": self.make_blobs,
-                             "circles": self.make_circles} # "classification": self.make_classification,
+                             "classification": self.make_classification,
+                             "circles": self.make_circles,
+                             "two_moons": self.make_two_moons}
 
     def get_dataset(self, dataset):
         if dataset not in self.dataset_func.keys():
@@ -125,4 +127,7 @@ class Create_Data:
         """
         return datasets.samples_generator.make_blobs(self.n_samples, self.n_dim,
                                                      np.random.uniform(-5, 5, size=(self.n_clusters, self.n_dim)),
-                                                     center_box=(-1, 1), shuffle=True, random_state=4629)
+                                                     center_box=(-1, 1), shuffle=True, random_state=self.random_state)
+
+    def make_two_moons(self):
+        return datasets.samples_generator.make_moons(n_samples=self.n_samples, noise=0.1, random_state=self.random_state)
