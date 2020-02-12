@@ -2,8 +2,7 @@ from __future__ import division
 
 __author__ = "shekkizh"
 """Simple demo of NNK graph construction"""
-from absl import flags
-from absl import app
+from absl import flags, app
 import os, time
 import numpy as np
 import graph_utils as utils
@@ -68,7 +67,7 @@ def main(argv=None):
     nnk_time = time.time() - start_time
     utils.plot_graph(W_nnk, X, filename=os.path.join(model_output_folder, "NNK_" + FLAGS.metric), vertex_color=y)
     print("KNN - %f s, %d edges,  NNK - %f s, %d edges" % (
-        knn_time, np.count_nonzero(W_knn) / 2, nnk_time, np.count_nonzero(W_nnk) / 2))
+        knn_time, W_knn.nnz / 2, nnk_time, W_nnk.nnz / 2))
 
 
 if __name__ == "__main__":

@@ -27,9 +27,9 @@ def knn_graph(G, mask, knn_param, reg):
     row_indices = np.expand_dims(np.arange(0, num_of_nodes), 1)
     row_indices = np.tile(row_indices, [1, knn_param])
     adjacency = sparse.coo_matrix((weight_values.ravel(), (row_indices.ravel(), neighbor_indices.ravel())),
-                                  shape=(num_of_nodes, num_of_nodes)).toarray()
+                                  shape=(num_of_nodes, num_of_nodes))
     # Symmetrize adjacency matrix
-    adjacency = np.maximum(adjacency, adjacency.T)
+    adjacency = adjacency.maximum(adjacency.T)
     return adjacency
 
 
@@ -60,10 +60,10 @@ def nnk_graph(G, mask, knn_param, reg=1e-6):
     row_indices = np.expand_dims(np.arange(0, num_of_nodes), 1)
     row_indices = np.tile(row_indices, [1, knn_param])
     adjacency = sparse.coo_matrix((weight_values.ravel(), (row_indices.ravel(), neighbor_indices.ravel())),
-                                  shape=(num_of_nodes, num_of_nodes)).toarray()
+                                  shape=(num_of_nodes, num_of_nodes))
     error = sparse.coo_matrix((error_values.ravel(), (row_indices.ravel(), neighbor_indices.ravel())),
                               shape=(num_of_nodes, num_of_nodes))
-    error_index = sparse.find(error > error.T)
-    adjacency[error_index[0], error_index[1]] = 0
-    adjacency = np.maximum(adjacency, adjacency.T)
+    # Alternate way of doing: error_index = sparse.find(error > error.T); adjacency[error_index[0], error_index[1]] = 0
+    adjacency = adjacency.multiply(error < error.T)
+    adjacency = adjacency.maximum(adjacency.T)
     return adjacency
