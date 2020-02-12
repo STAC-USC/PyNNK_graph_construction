@@ -2,14 +2,9 @@ __author__ = "shekkizh"
 
 import matplotlib.pyplot as plt
 import numpy as np
-from pygsp import graphs
 from sklearn import datasets
-import numba
+from plotting import Graph
 
-
-# # Pygsp plotting settings
-# plotting.BACKEND = 'matplotlib'
-# plt.rcParams['figure.figsize'] = (8, 5)
 
 def create_distance_matrix(X, Y=None, p=2):
     """
@@ -39,14 +34,14 @@ def create_directed_KNN_mask(D, knn_param=10, D_type='distance'):
 
 def plot_graph(W, X, filename=None, vertex_color=(0.12, 0.47, 0.71, 0.5)):
     """
-    Use Pygsp to plot graph.
+    Plot graph.
     :param vertex_color:
     :param W: Adjacency matrix
     :param X: Coordinate location for each node
     :param filename: filename to save graph fig in
     :return: No return value
     """
-    g = graphs.Graph(W)
+    g = Graph(W, coords=X)
     f = plt.figure()
     if X.shape[1] == 3:
         ax = f.gca(projection='3d')
@@ -58,7 +53,6 @@ def plot_graph(W, X, filename=None, vertex_color=(0.12, 0.47, 0.71, 0.5)):
     ax.axis('equal')
     ax.set_title('')
     _, _, weights = g.get_edge_list()
-    g.set_coordinates(X)
     g.plot(vertex_color=vertex_color, edge_width=weights, ax=ax, title='', colorbar=False)  # , show_edges=False
     plt.show()
     if filename is not None:
@@ -130,4 +124,5 @@ class Create_Data:
                                                      center_box=(-1, 1), shuffle=True, random_state=self.random_state)
 
     def make_two_moons(self):
-        return datasets.samples_generator.make_moons(n_samples=self.n_samples, noise=0.1, random_state=self.random_state)
+        return datasets.samples_generator.make_moons(n_samples=self.n_samples, noise=0.1,
+                                                     random_state=self.random_state)
