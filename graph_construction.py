@@ -5,7 +5,7 @@ from non_neg_qpsolver import non_negative_qpsolver
 import scipy.sparse as sparse
 
 
-def knn_graph(G, mask, knn_param, reg):
+def knn_graph(G, mask, knn_param, reg=1e-6):
     """
     Function to generate KNN graph given similarity matrix and mask
     :param G: Similarity matrix
@@ -62,8 +62,9 @@ def nnk_graph(G, mask, knn_param, reg=1e-6):
     adjacency = sparse.coo_matrix((weight_values.ravel(), (row_indices.ravel(), neighbor_indices.ravel())),
                                   shape=(num_of_nodes, num_of_nodes))
     error = sparse.coo_matrix((error_values.ravel(), (row_indices.ravel(), neighbor_indices.ravel())),
-                              shape=(num_of_nodes, num_of_nodes))
-    # Alternate way of doing: error_index = sparse.find(error > error.T); adjacency[error_index[0], error_index[1]] = 0
+                                  shape=(num_of_nodes, num_of_nodes))
+    # Alternate way of doing: error_index = sparse.find(error > error.T); adjacency[error_index[0], error_index[
+    # 1]] = 0
     adjacency = adjacency.multiply(error < error.T)
     adjacency = adjacency.maximum(adjacency.T)
     return adjacency
