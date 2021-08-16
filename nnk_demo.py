@@ -13,9 +13,9 @@ FLAGS = flags.FLAGS
 # %% Experiment associated settings
 flags.DEFINE_string('data_dir', 'datasets/', 'dataset directory to import data from')
 flags.DEFINE_string('logs_dir', 'logs/', 'log directory to save results and outputs')
-flags.DEFINE_string('dataset', 'circles', 'dataset to use for experiment')
+flags.DEFINE_string('dataset', 'toy_points', 'dataset to use for experiment')
 # %% Algorithm specific parameters
-flags.DEFINE_integer('knn_param', 10, 'number of neighbors to use for NNK')
+flags.DEFINE_integer('knn_param', 5, 'number of neighbors to use for NNK')
 # flags.DEFINE_integer('sigma_k', 10, 'choice of "k"th neighbor for sigma calculation')
 flags.DEFINE_float('thresh', 1e-6, 'threshold corresponding to minimum value of edge weights')
 flags.DEFINE_string('metric', 'rbf', 'Similarity metric to use for finding neighbors: cosine, rbf')
@@ -24,7 +24,7 @@ flags.DEFINE_float('p', 2, 'type of Lp distance to use (if used)')
 
 # %%
 def get_toy_data(load_from_file=False):
-    n_samples = 1000
+    n_samples = 100
     n_dim = 2
     n_clusters = 2
     dataset_generator = utils.Create_Data(n_samples, n_dim, n_clusters)
@@ -61,14 +61,17 @@ def main(argv=None):
     start_time = time.time()
     W_knn = knn_graph(G, knn_mask, FLAGS.knn_param, FLAGS.thresh)
     knn_time = time.time() - start_time
-    utils.plot_graph(W_knn, X, filename=os.path.join(model_output_folder, "KNN_" + FLAGS.metric), vertex_color=y)
+    utils.plot_graph(W_knn, X,
+                     filename=os.path.join(model_output_folder, "KNN_%d_%s" % (FLAGS.knn_param, FLAGS.metric)),
+                     vertex_color=y)
     start_time = time.time()
     W_nnk = nnk_graph(G, knn_mask, FLAGS.knn_param, FLAGS.thresh)
     nnk_time = time.time() - start_time
-    utils.plot_graph(W_nnk, X, filename=os.path.join(model_output_folder, "NNK_" + FLAGS.metric), vertex_color=y)
+    utils.plot_graph(W_nnk, X,
+                     filename=os.path.join(model_output_folder, "NNK_%d_%s" % (FLAGS.knn_param, FLAGS.metric)),
+                     vertex_color=y)
     print("KNN - %f s, %d edges,  NNK - %f s, %d edges" % (
         knn_time, W_knn.nnz / 2, nnk_time, W_nnk.nnz / 2))
-
 
 if __name__ == "__main__":
     app.run(main)

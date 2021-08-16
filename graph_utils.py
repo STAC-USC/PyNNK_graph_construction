@@ -54,7 +54,7 @@ def plot_graph(W, X, filename=None, vertex_color=(0.12, 0.47, 0.71, 0.5)):
     ax.set_title('')
     _, _, weights = g.get_edge_list()
     g.plot(vertex_color=vertex_color, edge_width=weights, ax=ax, title='', colorbar=False)  # , show_edges=False
-    plt.show()
+    # plt.show()
     if filename is not None:
         f.savefig(filename + '_graph.pdf')
 
@@ -87,7 +87,8 @@ class Create_Data:
         self.dataset_func = {"gauss_mixture": self.make_blobs,
                              "classification": self.make_classification,
                              "circles": self.make_circles,
-                             "two_moons": self.make_two_moons}
+                             "two_moons": self.make_two_moons,
+                             "toy_points": self.make_toy_points}
 
     def get_dataset(self, dataset):
         if dataset not in self.dataset_func.keys():
@@ -126,3 +127,10 @@ class Create_Data:
     def make_two_moons(self):
         return datasets.samples_generator.make_moons(n_samples=self.n_samples, noise=0.1,
                                                      random_state=self.random_state)
+
+    def make_toy_points(self):
+        angles = 2*np.pi*np.linspace(0, 1, 4)[:-1]
+        X = np.stack([np.cos(angles), np.sin(angles)]).T
+        X = np.concatenate([[[0,0]], 0.5*X, X])
+        y = np.ones(X.shape[0])
+        return X, y
