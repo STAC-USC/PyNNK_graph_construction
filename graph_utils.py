@@ -5,8 +5,22 @@ import numpy as np
 from sklearn import datasets
 from plotting import Graph
 
+def create_distance_matrix(X, p=2):
+    """
+    Create distance matrix
+    :param X:
+    :param metric:
+    :return:
+    """
+    n = X.shape[0]
+    W = np.zeros((n, n))
+    for i in range(n):
+        for j in range(i, n):
+            W[i, j] = lp_distance(X[i, :], X[j, :], p)
+    W = W + W.T
+    return W
 
-def create_distance_matrix(X, Y=None, p=2):
+def create_distance_to_Y_matrix(X, Y=None, p=2):
     """
     Create distance matrix
     :param X:
@@ -18,11 +32,9 @@ def create_distance_matrix(X, Y=None, p=2):
         Y = X
     W = np.zeros((X.shape[0], Y.shape[0]))
     for i in range(X.shape[0]):
-        for j in range(i, Y.shape[0]):
+        for j in range(0, Y.shape[0]):
             W[i, j] = lp_distance(X[i, :], Y[j, :], p)
-    W = W + W.T
     return W
-
 
 def create_directed_KNN_mask(D, knn_param=10, D_type='distance'):
     if D_type == 'similarity':
@@ -32,13 +44,14 @@ def create_directed_KNN_mask(D, knn_param=10, D_type='distance'):
     return directed_KNN_mask
 
 
-def plot_graph(W, X, filename=None, vertex_color=(0.12, 0.47, 0.71, 0.5)):
+def plot_graph(W, X, filename=None, vertex_color=(0.12, 0.47, 0.71, 0.5), vertex_size=None, colorbar=True):
     """
     Plot graph.
-    :param vertex_color:
     :param W: Adjacency matrix
     :param X: Coordinate location for each node
     :param filename: filename to save graph fig in
+    :param vertex_size: size of the nodes (can be used to highlight certain nodes)
+    :param vertex_color: color of the nodes (another modifiable parameter to highlight nodes)
     :return: No return value
     """
     g = Graph(W, coords=X)
@@ -53,7 +66,7 @@ def plot_graph(W, X, filename=None, vertex_color=(0.12, 0.47, 0.71, 0.5)):
     ax.axis('equal')
     ax.set_title('')
     _, _, weights = g.get_edge_list()
-    g.plot(vertex_color=vertex_color, edge_width=weights, ax=ax, title='', colorbar=False)  # , show_edges=False
+    g.plot(vertex_color=vertex_color, vertex_size=vertex_size, edge_width=weights, ax=ax, title='', colorbar=colorbar)  # , show_edges=False
     # plt.show()
     if filename is not None:
         f.savefig(filename + '_graph.pdf')
@@ -69,6 +82,23 @@ def lp_distance(pointA, pointB, p):
 
     return dist
 
+def to_categorical(y):
+    """Converts a class vector (integers) to binary class matrix.
+    Code modified from tensorflow keras
+    """
+    y = np.array(y, dtype=np.int)
+    input_shape = y.shape
+    if input_shape and input_shape[-1] == 1 and len(input_shape) > 1:
+        input_shape = tuple(input_shape[:-1])
+    y = y.ravel()
+
+    num_classes = np.max(y) + 1
+    n = y.shape[0]
+    categorical = np.zeros((n, num_classes), dtype=np.int)
+    categorical[np.arange(n), y] = 1
+    output_shape = input_shape + (num_classes,)
+    categorical = np.reshape(categorical, output_shape)
+    return categorical
 
 class Create_Data:
     """
