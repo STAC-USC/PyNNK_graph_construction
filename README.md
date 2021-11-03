@@ -2,8 +2,6 @@
 Python source code for the paper: [
 Graph Construction from Data using Non Negative Kernel regression (NNK Graphs)](https://arxiv.org/abs/1910.09383).
 
-To be presented at [ICASSP 2020](https://2020.ieeeicassp.org/).
-
 ## Citing this work
 ```
 @article{shekkizhar2020graph,
@@ -38,4 +36,12 @@ Possible fixes: Try changing `sigma` to better distinguish data points or
 increasing `epsilon_high` parameter used in `non_neg_qpsolver` function. 
 The issue can also be fixed by increasing command line parameter `thresh`.
 
+-----
+Update: Nov, 2021
 
+## Approximate NNK neighbors 
+- Solves a batched iterative version of NNK optimization for data points using 
+[FAISS](https://github.com/facebookresearch/faiss) and [PyTorch](https://pytorch.org/)
+  - Tested with `faiss-gpu==1.7.1.post2`, `torch==1.9.0`
+- `approximate_nnk_test.py` provides an example of how the code can be used with torch feature vectors 
+using a normalized cosine kernel (range in [0,1]) similarity metric. 
