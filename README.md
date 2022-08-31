@@ -2,6 +2,12 @@
 Python source code for the paper: [
 Graph Construction from Data using Non Negative Kernel regression (NNK Graphs)](https://arxiv.org/abs/1910.09383).
 
+
+### Demo
+Check out our notebook demo in Google colab [nnk_cpu_demo.ipynb](https://colab.research.google.com/drive/1jwp9N9eRzquaEjC00AdYHcl5tbilDuC2?usp=sharing)
+ that shows how to use NNK neighborhoods for classification in toy datasets.
+
+
 ## Citing this work
 ```
 @article{shekkizhar2020graph,
